@@ -39,12 +39,19 @@ public class App {
                 if (pStmt != null)
                     pStmt.close();
             } catch (SQLException se2) {
+                se2.printStackTrace();
             }
             try {
                 if (conn != null)
                     conn.close();
             } catch (SQLException se) {
                 se.printStackTrace();
+            }
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se3) {
+                se3.printStackTrace();
             }
         }
     }
