@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="Companies" table="companies">
+        <id name="companyID" type="java.lang.Integer">
+            <column name="COMPANY_ID" />
+            <generator class="increment" />
+        </id>
+        <property name="companyName" type="string">
+            <column name="COMPANY_NAME" length="150" not-null="true" unique="true" />
+        </property>
+        <set name="projects" table="company_project">
+            <key column="COMPANY_ID"/>
+            <many-to-many column="PROJECT_ID" class="Projects"/>
+        </set>
+    </class>
+</hibernate-mapping>

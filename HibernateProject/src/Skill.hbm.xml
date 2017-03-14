@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="Skill" table="skills">
+        <id name="skillID" type="java.lang.Integer">
+            <column name="SKILL_ID" />
+            <generator class="increment" />
+        </id>
+        <property name="skill" type="string">
+            <column name="SKILL" length="50" not-null="true" unique="true" />
+        </property>
+        <set name="developers" table="developer_skill" inverse="true">
+            <key column="SKILL_ID"/>
+            <many-to-many column="DEVELOPER_ID" class="Developer"/>
+        </set>
+    </class>
+</hibernate-mapping>

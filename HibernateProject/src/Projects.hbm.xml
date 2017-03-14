@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="Projects" table="projects">
+        <id name="projectID" type="java.lang.Integer">
+            <column name="PROJECT_ID" />
+            <generator class="increment" />
+        </id>
+        <property name="projectName" type="string">
+            <column name="PROJECT_NAME" length="150" not-null="true" unique="true" />
+        </property>
+        <property name="cost" type="java.lang.Integer">
+            <column name="COST"/>
+        </property>
+        <set name="developers" table="developer_project" inverse="true">
+            <key column="PROJECT_ID"/>
+            <many-to-many column="DEVELOPER_ID" class="Developer"/>
+        </set>
+        <set name="companies" table="company_project">
+            <key column="PROJECT_ID"/>
+            <many-to-many column="COMPANY_ID" class="Companies"/>
+        </set>
+    </class>
+</hibernate-mapping>

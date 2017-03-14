@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="Developer" table="DEVELOPERS">
+        <id name="developerID" type="java.lang.Integer">
+            <column name="DEVELOPER_ID"/>
+            <generator class="increment"/>
+        </id>
+        <property name="devName" type="string">
+            <column name="DEV_NAME" length="50" not-null="true" unique="false"/>
+        </property>
+        <property name="devSurname" type="string">
+            <column name="DEV_SURNAME" length="50" not-null="true" unique="false"/>
+        </property>
+        <property name="companyID" type="java.lang.Integer">
+            <column name="COMPANY"/>
+        </property>
+        <property name="salary" type="java.lang.Integer">
+            <column name="SALARY"/>
+        </property>
+        <set name="skills" table="developer_skill" cascade="save-update" inverse="false">
+            <key column="DEVELOPER_ID"/>
+            <many-to-many column="SKILL_ID" class="Skill"/>
+        </set>
+        <set name="projects" table="developer_project" cascade="save-update" inverse="false">
+            <key column="DEVELOPER_ID"/>
+            <many-to-many column="PROJECT_ID" class="Projects"/>
+        </set>
+    </class>
+</hibernate-mapping>
