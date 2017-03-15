@@ -11,7 +11,7 @@
         <property name="companyName" type="string">
             <column name="COMPANY_NAME" length="150" not-null="true" unique="true" />
         </property>
-        <set name="projects" table="company_project">
+        <set name="projects" table="company_project" inverse="false">
             <key column="COMPANY_ID"/>
             <many-to-many column="PROJECT_ID" class="Projects"/>
         </set>

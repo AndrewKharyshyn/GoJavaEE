@@ -1,6 +1,8 @@
 import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
 import java.util.*;
@@ -13,7 +15,6 @@ public class PersistenceMethods {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
             Developer developer = new Developer();
-            //developer.setDeveloperID(11);
             developer.setDevName("Sergiy");
             developer.setDevSurname("Yudkevych");
             developer.setCompanyID(5);
@@ -115,57 +116,39 @@ public class PersistenceMethods {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
 
-            Query query = session.createQuery("from Projects join Projects.companies where Companies.companyName=: paramCompName");
-            query.setParameter("paramCompName", "Cyklum");
-            List<Projects> projectsList = query.list();
-            for (Projects i : projectsList) {
-                System.out.println(i.getProjectName());
-            }
-            Query query2 = session.createQuery("from Developer where devSurname=:paramDevSur");
-            query2.setParameter("paramDevSur", "Kramarenko");
-            List<Developer> developerList = query2.list();
-            for (Developer i : developerList) {
-                System.out.println(i.getDevSurname());
-            }
+            String sql = "INSERT INTO developer_project(DEVELOPER_ID,PROJECT_ID) " +
+                    "VALUES ((SELECT developers.DEVELOPER_ID " +
+                    "FROM developers WHERE DEV_SURNAME = 'Kramarenko')," +
+                    "(SELECT companies.COMPANY_ID FROM companies WHERE COMPANY_NAME = 'GlobalLogic'))";
+
+            NativeQuery query = session.createNativeQuery(sql);
+            query.executeUpdate();
+            tx.commit();
             System.out.println("Developer has been added to project!\n");
-//
-//            session.update(developer);
-//            session.update(skill1);
-//            session.update(skill2);
-//
-//            tx.commit();
-//            session.close();
-//            System.out.println("Developer has been added to project successfully!\n");
         } catch (HibernateException he) {
             if (tx != null) {
                 tx.rollback();
                 he.printStackTrace();
             }
         }
+    }
 
-
-//    private static void addDeveloperToProj() throws SQLException {
-//        System.out.println("");
-//
-//        String sql = "INSERT INTO developer_project(DEVELOPER_ID,PROJECT_ID) " +
-//                "VALUES ((SELECT developers.DEVELOPER_ID " +
-//                "FROM developers WHERE DEV_SURNAME = 'Kramarenko')," +
-//                "(SELECT companies.COMPANY_ID \" +\n" +
-//                "                \"FROM companies WHERE COMPANY_NAME = 'Cyklum'))";
-//        stmt = conn.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
-//        stmt.executeUpdate(sql);
-//        System.out.println("Developer has been added to project!\n");
-//    }
-//
-//    private static void deleteProject() throws SQLException {
-//        System.out.println("Operation 6 /DELETE/: Deleting project...");
-//
-//        String sql = "DELETE projects.* FROM projects WHERE PROJECT_ID = 5";
-//        stmt = conn.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
-//        stmt.executeUpdate(sql);
-//        System.out.println("Project deleted successfully!\n");
-//    }
-
+    void deleteProject() throws HibernateException {
+        System.out.println("Operation 6 /DELETE/: Deleting project...");
+        Transaction tx = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tx = session.beginTransaction();
+            Query query = session.createQuery("delete Projects where projectID = 8");
+            query.executeUpdate();
+            System.out.println("Project deleted successfully!\n");
+        } catch (HibernateException he) {
+            if (tx != null) {
+                tx.rollback();
+                he.printStackTrace();
+            }
+        }
+        HibernateUtil.shutdown();
     }
 }
+
 

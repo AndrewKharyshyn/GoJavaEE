@@ -18,7 +18,7 @@
             <key column="PROJECT_ID"/>
             <many-to-many column="DEVELOPER_ID" class="Developer"/>
         </set>
-        <set name="companies" table="company_project">
+        <set name="companies" table="company_project" inverse="true">
             <key column="PROJECT_ID"/>
             <many-to-many column="COMPANY_ID" class="Companies"/>
         </set>
